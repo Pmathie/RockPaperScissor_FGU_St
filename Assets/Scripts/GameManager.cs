@@ -1,5 +1,7 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +15,10 @@ public class GameManager : MonoBehaviour
 
     public Image playerHealthBar;
     public Image enemyHealthBar;
+
+    public float countDownTime;
+    public TextMeshProUGUI countDownText;
+    private bool canChoose = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,6 +34,10 @@ public class GameManager : MonoBehaviour
     }
     public void ButtonPress(GameObject playerChoice)
     {
+        if(canChoose == false)
+        {
+            return;
+        }
         GameObject enemyChoice = enemyChoices[Random.Range(0, enemyChoices.Length)];
         foreach (GameObject a in playerChoices)
         {
@@ -60,6 +70,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Du tabte!");
             UpdateHealth(1, 0);
         }
+        canChoose = false;
 
     }
     public void UpdateHealth(float playerDamage, float enemyDamage)
@@ -77,5 +88,22 @@ public class GameManager : MonoBehaviour
             Debug.Log("Enemy Health:" + enemyHealth);
         }
 
+    }
+    public void StartRoundButton()
+    {
+        StartCoroutine(CountDown());
+    }
+    private IEnumerator CountDown()
+    {
+        countDownText.text = "Vent til NU før du vælger!";
+        yield return new WaitForSeconds(countDownTime);
+        countDownText.text = "Sten";
+        yield return new WaitForSeconds(countDownTime);
+        countDownText.text = "Saks";
+        yield return new WaitForSeconds(countDownTime);
+        countDownText.text = "Papir";
+        yield return new WaitForSeconds(countDownTime);
+        countDownText.text = "NU!";
+        canChoose = true;
     }
 }
