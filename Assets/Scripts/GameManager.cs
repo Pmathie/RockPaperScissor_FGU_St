@@ -19,11 +19,15 @@ public class GameManager : MonoBehaviour
     public float countDownTime;
     public TextMeshProUGUI countDownText;
     private bool canChoose = false;
+
+    private AudioManager audioManager;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         startingHealth = playerHealth;
         enemyStartingHealth = enemyHealth;
+        audioManager = AudioManager.Instance;
 
     }
 
@@ -36,7 +40,9 @@ public class GameManager : MonoBehaviour
     {
         if(canChoose == false)
         {
+            audioManager.PlaySound("Error");
             return;
+
         }
         GameObject enemyChoice = enemyChoices[Random.Range(0, enemyChoices.Length)];
         foreach (GameObject a in playerChoices)
@@ -50,6 +56,8 @@ public class GameManager : MonoBehaviour
         
         enemyChoice.SetActive(true);
         playerChoice.SetActive(true);
+        audioManager.PlaySound(playerChoice.GetComponent<AudioSource>().name);
+
 
         Debug.Log("Du valgte: " + playerChoice.tag);
         Debug.Log("Din modstander valgte: " + enemyChoice.tag);
@@ -91,6 +99,7 @@ public class GameManager : MonoBehaviour
     }
     public void StartRoundButton()
     {
+        
         StartCoroutine(CountDown());
     }
     private IEnumerator CountDown()
